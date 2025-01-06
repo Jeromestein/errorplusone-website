@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 import type { Header } from '@/payload-types'
-
-import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
+import Image from 'next/image'
+import clsx from 'clsx'
 
 interface HeaderClientProps {
   data: Header
@@ -33,7 +33,17 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({ data }) => {
     <header className="container relative z-20   " {...(theme ? { 'data-theme': theme } : {})}>
       <div className="py-8 flex justify-between">
         <Link href="/">
-          <Logo loading="eager" priority="high" className="invert dark:invert-0" />
+          <div className={clsx('flex items-center gap-3')}>
+            <Image
+              src="/e+1-logo-2150x1024.png"
+              alt="Meiyu Logo"
+              width={100}
+              height={100}
+              loading="eager"
+              fetchPriority="high"
+              className={clsx('max-w-[100px]')}
+            />
+          </div>
         </Link>
         <HeaderNav data={data} />
       </div>
