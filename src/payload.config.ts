@@ -60,20 +60,107 @@ export default buildConfig({
         },
       ],
     },
+    // Override the *icon* and *title suffix* in the browser tab for the Admin Panel
+    meta: {
+      titleSuffix: ' - e+1 CMS',
+      icons: [
+        {
+          fetchPriority: 'high',
+          rel: 'icon',
+          type: 'image/svg+xml',
+          url: '/favicon.svg',
+        },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '96x96',
+          url: '/favicon-96x96.png',
+        },
+        {
+          rel: 'shortcut icon',
+          url: '/favicon.ico',
+        },
+        {
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          url: '/apple-touch-icon.png',
+        },
+        {
+          rel: 'manifest',
+          url: '/site.webmanifest',
+        },
+      ],
+    },
   },
-  // This config helps us configure global or default features that the other editors can inherit
-  editor: defaultLexical,
+  collections: [Pages, Posts, Media, Categories, Users],
+  cors: [getServerSideURL()].filter(Boolean),
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
     },
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
-  cors: [getServerSideURL()].filter(Boolean),
+  // This config helps us configure global or default features that the other editors can inherit
+  editor: defaultLexical,
+  // email: nodemailerAdapter({
+  //   defaultFromAddress: process.env.SMTP_USER as string,
+  //   defaultFromName: process.env.SMTP_DEFAULT_FROM_NAME as string,
+  //   transportOptions: {
+  //     host: process.env.SMTP_HOST,
+  //     port: parseInt(process.env.SMTP_PORT as string),
+  //     secure: process.env.SMTP_SECURE === 'true',
+  //     auth: {
+  //       user: process.env.SMTP_USER,
+  //       pass: process.env.SMTP_PASS,
+  //     },
+  //   },
+  // }),
+  // email: resendAdapter({
+  //   defaultFromAddress: process.env.RESEND_DEFAULT_FROM_ADDRESS as string,
+  //   defaultFromName: process.env.RESEND_DEFAULT_FROM_NAME as string,
+  //   apiKey: process.env.RESEND_API_KEY || '',
+  // }),
   globals: [Header, Footer],
+  localization: {
+    locales: [
+      {
+        label: {
+          en: 'English',
+          zh: '英文',
+        },
+        code: 'en',
+      },
+      {
+        label: {
+          en: 'Chinese',
+          zh: '中文',
+        },
+        code: 'zh',
+      },
+    ],
+    defaultLocale: 'en',
+    fallback: true,
+  },
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
+    // s3Storage({
+    //   collections: {
+    //     media: {
+    //       prefix: 'media',
+    //     },
+    //   },
+    //   bucket: process.env.S3_BUCKET as string,
+    //   config: {
+    //     forcePathStyle: true,
+    //     credentials: {
+    //       accessKeyId: process.env.S3_ACCESS_KEY_ID as string,
+    //       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY as string,
+    //     },
+    //     region: process.env.S3_REGION,
+    //     endpoint: process.env.S3_ENDPOINT,
+    //     // ... Other S3 configuration
+    //   },
+    // }),
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
